@@ -2,9 +2,10 @@ const express = require('express')
 const app = express()
 const MongoClient = require('mongodb').MongoClient
 const PORT = 1234
+require('dotenv').config()
 
 let db,
-    dbConnectionStr = 'mongodb+srv://Mario:Cooljamz0424!@cluster0.r5du9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+    dbConnectionStr = process.env.DB_STRING,
     dbName = '100devstracker'
 
 MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true })
@@ -39,7 +40,7 @@ app.post('/addContact', (request, response) => {
 })
 
 app.delete('/deleteContact', (request, response) => {
-    db.collection('contacts').deleteOne({})
+    db.collection('contacts').deleteOne(request.body)
     .then(result => {
         console.log('Contact Deleted')
         response.json('Contact Deleted')
@@ -51,3 +52,5 @@ app.delete('/deleteContact', (request, response) => {
 app.listen(process.env.PORT || PORT, ()=>{
     console.log(`Server running on port ${PORT}`)
 })
+
+console.log(process.env)
